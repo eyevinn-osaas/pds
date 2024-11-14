@@ -20,7 +20,7 @@ else
 fi
 
 export PDS_PORT=${PORT:-8080}
-export PDS_HOSTNAME=${OSC_HOSTNAME}
+export PDS_HOSTNAME=${DNS_NAME:-${OSC_HOSTNAME}}
 export PDS_ADMIN_PASSWORD=${ADMIN_PASSWORD}
 export PDS_JWT_SECRET=$(eval "${GENERATE_SECURE_SECRET_CMD}")
 export PDS_PLC_ROTATION_KEY_K256_PRIVATE_KEY_HEX=$(eval "${GENERATE_K256_PRIVATE_KEY_CMD}")
@@ -33,5 +33,6 @@ export PDS_REPORT_SERVICE_URL="https://mod.bsky.app"
 export PDS_REPORT_SERVICE_DID="did:plc:ar7c4by46qjdydhdevvrndac"
 export PDS_CRAWLERS="https://bsky.network"
 
+echo $PDS_HOSTNAME
 
 cd /app && node --enable-source-maps index.js
