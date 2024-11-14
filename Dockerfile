@@ -20,6 +20,7 @@ RUN pnpm install --production --frozen-lockfile > /dev/null
 FROM node:20.20-alpine3.23
 
 RUN apk add --update dumb-init
+RUN apk add --no-cache ca-certificates curl gnupg jq lsb-release openssl sqlite xxd coreutils
 
 # Avoid zombie processes, handle signal forwarding
 ENTRYPOINT ["dumb-init", "--"]
@@ -27,6 +28,7 @@ ENTRYPOINT ["dumb-init", "--"]
 WORKDIR /app
 COPY --from=build /app /app
 COPY --from=build /tmp/goat-build /usr/local/bin/goat
+COPY osc-start.sh .
 
 EXPOSE 3000
 ENV PDS_PORT=3000
@@ -34,7 +36,7 @@ ENV NODE_ENV=production
 # potential perf issues w/ io_uring on this version of node
 ENV UV_USE_IO_URING=0
 
-CMD ["node", "--enable-source-maps", "index.js"]
+CMD ["./osc-start.sh"]
 
 LABEL org.opencontainers.image.source=https://github.com/bluesky-social/pds
 LABEL org.opencontainers.image.description="AT Protocol PDS"
